@@ -86,7 +86,15 @@ MinAlertLevel = suggestion
 IgnoredScopes = code, tt
 ```
 
-`IgnoredScopes` specifies inline-level HTML tags to ignore. In other words, these tags may occur in an active scope \(see `SkippedScopes`\) but their content still won't raise any alerts.
+`IgnoredScopes` specifies inline-level HTML tags to ignore. In other words, these tags may occur in an active scope \(unlike `SkippedScopes`, which are _skipped_ entirely\) but their content still won't raise any alerts.
+
+### `IgnoredClasses` \[core\]
+
+`IgnoredClasses` specifies classes to ignore. These classes may appear on both inline- and block-level HTML elements.
+
+```text
+IgnoredClasses = my-class, another-class
+```
 
 ### `SkippedScopes` \[core\]
 
@@ -107,10 +115,6 @@ WordTemplate = \b(?:%s)\b
 
 ### `SphinxBuildPath` \[core\]
 
-{% hint style="warning" %}
-Requires Vale &gt;= v2.0!
-{% endhint %}
-
 ```text
 SphinxBuildPath = _build
 ```
@@ -118,10 +122,6 @@ SphinxBuildPath = _build
 `SphinxBuildPath` is the path to your `_build` directory \(relative to the configuration file\).
 
 ### `SphinxAutoBuild` \[core\]
-
-{% hint style="warning" %}
-Requires Vale &gt;= v2.0!
-{% endhint %}
 
 ```text
 SphinxAutoBuild = make html
@@ -156,10 +156,6 @@ TokenIgnores = (\$+[^\n$]+\$+)
 `TokenIgnores` allow you to exclude certain inline-level sections of text that don't have an associated HTML tag that could be used with `IgnoredScopes`. See [Non-Standard Markup](markup.md#non-standard-markup) for more information.
 
 ### `Transform`
-
-{% hint style="warning" %}
-Requires Vale &gt;= v2.0!
-{% endhint %}
 
 ```text
 Transform = docbook-xsl-snapshot/html/docbook.xsl
