@@ -9,7 +9,7 @@
 * [Configuration](getting-started/configuration.md)
 * [Markup](getting-started/markup.md)
 * [Styles](getting-started/styles.md)
-* [FAQ](faq.md)
+* [FAQ](getting-started/faq.md)
 
 ## Guides & Tutorials <a id="resources"></a>
 
