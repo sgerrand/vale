@@ -70,8 +70,6 @@ link: 'https://errata.ai/'
 
 {% hint style="info" %}
 Vale uses Go's [`regexp` package](https://golang.org/pkg/regexp/syntax/) to evaluate all patterns in rule definitions. This means that lookarounds and backreferences aren't supported.
-
-This shouldn't be a limitation, though, [as Vale offers its own ways](https://medium.com/@jdkato/rule-authoring-101-ca066233970c?source=friends_link&sk=85ff5198b7548b326d6aaab43aca40f9) to achieve same behavior.
 {% endhint %}
 
 ### `existence`
@@ -343,7 +341,7 @@ metrics:
 
 | Name | Type | Description |
 | :--- | :--- | :--- |
-| `metrics` | `array` | `$title`, `$sentence`, `$lower`, `$upper`, or a pattern. |
+| `metrics` | `array` | One or more of "Gunning Fog", "Coleman-Liau", "Flesch-Kincaid", "SMOG", and "Automated Readability". |
 | `grade` | `float` | The highest acceptable score. |
 
 `readability` calculates a readability score according the specified metrics. The supported tests are Gunning-Fog, Coleman-Liau, Flesch-Kincaid, SMOG, and Automated Readability.
@@ -368,7 +366,7 @@ ignore: ci/vocab.txt
 | Name | Type | Description |
 | :--- | :--- | :--- |
 | `aff` | `string` | The fully-qualified path to a Hunspell-compatible `.aff` file. |
-| `custom` | `bool` | Turn off the default filters for acronyms, abbreviations, and numbers. |
+| `custon` | `bool` | Turn off the default filters for acronyms, abbreviations, and numbers. |
 | `dic` | `string` | The fully-qualified path to a Hunspell-compatible `.dic` file. |
 | `filters` | `array` | An array of patterns to ignore during spell checking. |
 | `ignore` | `string` | A relative path \(from `StylesPath`\) to a personal vocabulary file consisting of one word per line to ignore. |
