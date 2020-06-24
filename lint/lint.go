@@ -30,6 +30,7 @@ package lint
 import (
 	"errors"
 	"fmt"
+	"io/ioutil"
 	"os"
 	"os/exec"
 	"path/filepath"
@@ -38,8 +39,11 @@ import (
 
 	"github.com/errata-ai/vale/check"
 	"github.com/errata-ai/vale/core"
+	jsoniter "github.com/json-iterator/go"
 	"github.com/remeh/sizedwaitgroup"
 )
+
+var json = jsoniter.ConfigCompatibleWithStandardLibrary
 
 // A Linter lints a File.
 type Linter struct {
@@ -62,6 +66,22 @@ func NewBlock(ctx, txt, raw, sel string) Block {
 	}
 	return Block{
 		Context: ctx, Text: txt, Raw: raw, Scope: core.Selector{Value: sel}}
+}
+
+// LoadCache ...
+func (l Linter) LoadCache(f *core.File) {
+	path := filepath.Join(l.Config.StylesPath, "Cache", core.Hash(f.Path))
+	if core.FileExists(path) {
+		file, _ := ioutil.ReadFile(path)
+		_ = json.Unmarshal(file, &f.Cache)
+	}
+}
+
+// SaveCache ...
+func (l Linter) SaveCache(f *core.File) {
+	path := filepath.Join(l.Config.StylesPath, "Cache", core.Hash(f.Path))
+	file, _ := json.MarshalIndent(f.Cache, "", " ")
+	_ = ioutil.WriteFile(path, file, 0644)
 }
 
 // LintString src according to its format.
@@ -179,6 +199,7 @@ func (l Linter) lintFiles(done <-chan core.File, root string, glob core.Glob) (<
 // TODO: remove dependencies on `asciidoctor` and `rst2html`.
 func (l Linter) lintFile(src string) *core.File {
 	file := core.NewFile(src, l.Config)
+	l.LoadCache(file)
 	if len(file.Checks) == 0 && len(file.BaseStyles) == 0 {
 		if len(l.Config.GBaseStyles) == 0 && len(l.Config.GChecks) == 0 {
 			// There's nothing to do; bail early.
@@ -239,6 +260,7 @@ func (l Linter) lintFile(src string) *core.File {
 		l.lintLines(file)
 	}
 
+	l.SaveCache(file)
 	return file
 }
 
@@ -295,7 +317,17 @@ func (l Linter) lintText(f *core.File, blk Block, lines int, pad int) {
 			continue
 		}
 
-		for _, a := range chk.Rule(txt, f) {
+		key := core.Hash(txt) + "-" + name
+		ret := []core.Alert{}
+
+		if v, ok := f.Cache[key]; ok {
+			ret = v
+		} else {
+			ret = chk.Rule(txt, f)
+			f.Cache[key] = ret
+		}
+
+		for _, a := range ret {
 			// HACK: Workaround for LT-based rules.
 			//
 			// See `rule/grammar.go`.
@@ -303,6 +335,11 @@ func (l Linter) lintText(f *core.File, blk Block, lines int, pad int) {
 				continue
 			}
 			core.FormatAlert(&a, chk.Level, name)
+			// NOTE: We can't cache this because the file locations could
+			// change due to edits in between reads.
+			//
+			// The *result* will be the same, but the *location* could be
+			// different.
 			f.AddAlert(a, blk.Context, txt, lines, pad)
 		}
 	}

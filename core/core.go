@@ -37,6 +37,7 @@ type File struct {
 	Sequences  []string          // tracks various info (e.g., defined abbreviations)
 	Simple     bool
 	Summary    bytes.Buffer // holds content to be included in summarization checks
+	Cache      map[string][]Alert
 
 	history map[string]int
 	matcher *closestmatch.ClosestMatch
@@ -171,8 +172,8 @@ func NewFile(src string, config *Config) *File {
 		Path: src, NormedExt: ext, Format: format, RealExt: filepath.Ext(src),
 		BaseStyles: baseStyles, Checks: checks, Scanner: scanner, Lines: lines,
 		Comments: make(map[string]bool), Content: content, history: make(map[string]int),
-		Simple: config.Simple, Transform: transform,
-		matcher: closestmatch.New(lines, []int{2}),
+		Simple: config.Simple, Transform: transform, matcher: closestmatch.New(lines, []int{2}),
+		Cache: make(map[string][]Alert),
 	}
 
 	return &file

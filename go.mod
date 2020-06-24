@@ -7,12 +7,15 @@ require (
 	github.com/blang/semver v3.5.1+incompatible
 	github.com/dsnet/compress v0.0.1 // indirect
 	github.com/fatih/color v1.9.0
+	github.com/francoispqt/gojay v1.2.13
 	github.com/frankban/quicktest v1.7.2 // indirect
 	github.com/gobwas/glob v0.2.3
 	github.com/golang/snappy v0.0.1 // indirect
 	github.com/icza/gox v0.0.0-20200615201046-5fb07725cc03
 	github.com/jdkato/prose v1.1.1
 	github.com/jdkato/regexp v0.1.0
+	github.com/json-iterator/go v1.1.10
+	github.com/kofalt/go-memoize v0.0.0-20190519021333-cf756f0462a4
 	github.com/levigross/grequests v0.0.0-20190908174114-253788527a1a
 	github.com/mholt/archiver v3.1.1+incompatible
 	github.com/mitchellh/go-homedir v1.1.0

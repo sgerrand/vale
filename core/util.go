@@ -2,6 +2,8 @@ package core
 
 import (
 	"bytes"
+	"crypto/md5"
+	"encoding/hex"
 	"encoding/json"
 	"fmt"
 	"io"
@@ -25,6 +27,13 @@ import (
 // ExeDir is our starting location.
 var ExeDir string
 var code = regexp.MustCompile("`?`[^`@\n]+``?")
+
+// Hash ...
+func Hash(text string) string {
+	hasher := md5.New()
+	hasher.Write([]byte(text))
+	return hex.EncodeToString(hasher.Sum(nil))
+}
 
 // PrintJSON prints the data type `t` as JSON.
 func PrintJSON(t interface{}) error {
